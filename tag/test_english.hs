@@ -108,13 +108,12 @@ sentences =
   , "john saw the boy with the glasses and the telescope"
   ]
 
-main = do
-  forM_ sentences $ \text -> do
-    putStrLn "==============================================================="
-    putStrLn text
-    putStrLn "==============================================================="
-    let trees = parse g _S $ words text
-    forM_ (zip [(1::Int)..] (Set.toList trees)) $ \(i, t) -> do
-        putStrLn $ "(" ++ show i ++ ")"
-        putStrLn $ showTree t
-        putStrLn ""
+main = forM_ sentences $ \text -> do
+  putStrLn "==============================================================="
+  putStrLn text
+  putStrLn "==============================================================="
+  let trees = parse g _S $ words text
+  forM_ (zip [(1::Int)..] (Set.toList trees)) $ \(i, t) -> do
+      putStrLn $ "(" ++ show i ++ ")"
+      putStrLn $ showTree t
+      putStrLn ""

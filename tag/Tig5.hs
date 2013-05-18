@@ -13,8 +13,10 @@ module Tig5
 -- ==============================================================================
 -- ==============================================================================
 --  Tree Insertion Grammar recognizer and parser
---  By Tomer Filiba, 2012-04-28
+--  Original Python version By Tomer Filiba, 2012-04-28
 --  Based on an algorithm outlined in [Schabes 94]
+--
+--  Transliterated to Haskell by Eyal Lotem, 2013.
 -- ==============================================================================
 -- ==============================================================================
 
@@ -141,7 +143,7 @@ makeLenses ''Tree
 makePrisms ''Node
 
 mkTree :: NonTerminal -> [Node] -> Tree
-mkTree nt children = Tree InitTree nt children
+mkTree = Tree InitTree
 
 footN :: NonTerminal -> Node
 footN = NodeFoot
@@ -243,10 +245,10 @@ showTIG (TIG inits lefts rights) = fromlines . concat $
   ]
   where
     showMap title m =
-      [ "===" ++ title ++ "===" ] ++
+      ( "===" ++ title ++ "===" ) :
       concatMap showPair (Map.toList m)
     showPair (nt, ts) =
-      [ ntName nt ++ " -> " ] ++
+      ( ntName nt ++ " -> " ) :
       map (indent 3 . showTree) (List.sort ts)
 
 assert :: E.Exception e => e -> (a -> Bool) -> a -> a
@@ -545,7 +547,7 @@ parseChart :: TIG -> NonTerminal -> [String] -> Chart
 parseChart grammar startSymbol tokens = (`execState` emptyChart) $ do
   -- (1)
   forM_ (getInitTreesFor startSymbol grammar) $ \t ->
-    (chartAdd (ChartState t 0 0 0) "[1]" Nothing)
+    chartAdd (ChartState t 0 0 0) "[1]" Nothing
   mainLoop
   where
     paddedTokens = Nothing : map Just tokens
